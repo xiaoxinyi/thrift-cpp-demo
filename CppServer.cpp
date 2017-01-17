@@ -34,7 +34,7 @@
 #include <stdexcept>
 #include <sstream>
 
-#include "../gen-cpp/Calculator.h"
+#include "./gen-cpp/Calculator.h"
 
 using namespace std;
 using namespace apache::thrift;

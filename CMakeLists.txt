@@ -17,6 +17,7 @@
 # under the License.
 #
 cmake_minimum_required(VERSION 2.8)
+project(thrift-cpp-demo)
 
 
 include_directories("/usr/include/boost/")
@@ -24,27 +25,30 @@ include_directories("/usr/include/boost/")
 #Make sure gen-cpp files can be included
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/gen-cpp")
-include_directories("${PROJECT_SOURCE_DIR}/lib/cpp/src")
+#include_directories("${PROJECT_SOURCE_DIR}/lib/cpp/src")
 
-# include(ThriftMacros)
-
- SET(CMAKE_CXX_FLAGS_RELEASE  "-lpthread")
+# SET(CMAKE_CXX_FLAGS_RELEASE  "-lpthread")
 
 set(tutorialgencpp_SOURCES
-    gen-cpp/Calculator.cpp
-    gen-cpp/SharedService.cpp
-    gen-cpp/shared_constants.cpp
-    gen-cpp/shared_types.cpp
-    gen-cpp/tutorial_constants.cpp
-    gen-cpp/tutorial_types.cpp
+    ${PROJECT_SOURCE_DIR}/gen-cpp/Calculator.cpp
+    ${PROJECT_SOURCE_DIR}/gen-cpp/SharedService.cpp
+     ${PROJECT_SOURCE_DIR}/gen-cpp/shared_constants.cpp
+     ${PROJECT_SOURCE_DIR}/gen-cpp/shared_types.cpp
+     ${PROJECT_SOURCE_DIR}/gen-cpp/tutorial_constants.cpp
+     ${PROJECT_SOURCE_DIR}/gen-cpp/tutorial_types.cpp
 )
 add_library(tutorialgencpp STATIC ${tutorialgencpp_SOURCES})
 target_link_libraries(tutorialgencpp /usr/local/lib/libthrift.a)
 target_link_libraries(tutorialgencpp pthread)
-# LINK_AGAINST_THRIFT_LIBRARY(tutorialgencpp thrift)
 
-add_custom_command(OUTPUT gen-cpp/Calculator.cpp gen-cpp/SharedService.cpp gen-cpp/shared_constants.cpp gen-cpp/shared_types.cpp gen-cpp/tutorial_constants.cpp gen-cpp/tutorial_types.cpp
-    COMMAND ${THRIFT_COMPILER} --gen cpp -r ${PROJECT_SOURCE_DIR}/tutorial/tutorial.thrift
+set(THRIFT_COMPILER thrift)
+add_custom_command(OUTPUT  ${PROJECT_SOURCE_DIR}/gen-cpp/Calculator.cpp 
+                             ${PROJECT_SOURCE_DIR}/gen-cpp/SharedService.cpp 
+                              ${PROJECT_SOURCE_DIR}/gen-cpp/shared_constants.cpp 
+                               ${PROJECT_SOURCE_DIR}/gen-cpp/shared_types.cpp 
+                                ${PROJECT_SOURCE_DIR}/gen-cpp/tutorial_constants.cpp 
+                                 ${PROJECT_SOURCE_DIR}/gen-cpp/tutorial_types.cpp 
+    COMMAND ${THRIFT_COMPILER} --gen cpp -r ${PROJECT_SOURCE_DIR}/tutorial.thrift
 )
 
 add_executable(TutorialServer CppServer.cpp)
