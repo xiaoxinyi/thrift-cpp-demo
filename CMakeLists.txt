@@ -1,21 +1,5 @@
-#
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements. See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership. The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License. You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied. See the License for the
-# specific language governing permissions and limitations
-# under the License.
-#
+# remove *.skeleton.cpp before run cmake
+
 cmake_minimum_required(VERSION 2.8)
 project(thrift-cpp-demo)
 
@@ -29,38 +13,28 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}/gen-cpp")
 
 # SET(CMAKE_CXX_FLAGS_RELEASE  "-lpthread")
 
-set(tutorialgencpp_SOURCES
-    ${PROJECT_SOURCE_DIR}/gen-cpp/Calculator.cpp
-    ${PROJECT_SOURCE_DIR}/gen-cpp/SharedService.cpp
-     ${PROJECT_SOURCE_DIR}/gen-cpp/shared_constants.cpp
-     ${PROJECT_SOURCE_DIR}/gen-cpp/shared_types.cpp
-     ${PROJECT_SOURCE_DIR}/gen-cpp/tutorial_constants.cpp
-     ${PROJECT_SOURCE_DIR}/gen-cpp/tutorial_types.cpp
-)
-add_library(tutorialgencpp STATIC ${tutorialgencpp_SOURCES})
-target_link_libraries(tutorialgencpp /usr/local/lib/libthrift.a)
-target_link_libraries(tutorialgencpp pthread)
+set(SERVER_SOURCE "CppServer.cpp")
+set(CLIENT_SOURCE "CppClient.cpp")
 
-set(THRIFT_COMPILER thrift)
-add_custom_command(OUTPUT  ${PROJECT_SOURCE_DIR}/gen-cpp/Calculator.cpp 
-                             ${PROJECT_SOURCE_DIR}/gen-cpp/SharedService.cpp 
-                              ${PROJECT_SOURCE_DIR}/gen-cpp/shared_constants.cpp 
-                               ${PROJECT_SOURCE_DIR}/gen-cpp/shared_types.cpp 
-                                ${PROJECT_SOURCE_DIR}/gen-cpp/tutorial_constants.cpp 
-                                 ${PROJECT_SOURCE_DIR}/gen-cpp/tutorial_types.cpp 
-    COMMAND ${THRIFT_COMPILER} --gen cpp -r ${PROJECT_SOURCE_DIR}/tutorial.thrift
-)
+file(GLOB thrift_gen_cpp_SOURCES "gen-cpp/*.cpp")
+# list(REMOVE_ITEM thrift_gen_cpp_SOURCES "/root/dl-data/thrift-cpp/gen-cpp/SharedService_server.skeleton.cpp")
+message(STATUS "haha ${thrift_gen_cpp_SOURCES}")
 
-add_executable(TutorialServer CppServer.cpp)
-target_link_libraries(TutorialServer tutorialgencpp)
-target_link_libraries(TutorialServer /usr/local/lib/libthrift.a)
-# LINK_AGAINST_THRIFT_LIBRARY(TutorialServer thrift)
-target_link_libraries(TutorialServer ${ZLIB_LIBRARIES})
-target_link_libraries(TutorialServer pthread)
+add_library(thrift_gen_cpp STATIC ${thrift_gen_cpp_SOURCES})
+target_link_libraries(thrift_gen_cpp /usr/local/lib/libthrift.a)
+target_link_libraries(thrift_gen_cpp pthread)
 
-add_executable(TutorialClient CppClient.cpp)
-target_link_libraries(TutorialClient tutorialgencpp)
-target_link_libraries(TutorialClient /usr/local/lib/libthrift.a)
-# LINK_AGAINST_THRIFT_LIBRARY(TutorialClient thrift)
-target_link_libraries(TutorialClient ${ZLIB_LIBRARIES})
-target_link_libraries(TutorialClient pthread)
+
+add_executable(${SERVER_SOURCE} CppServer.cpp)
+target_link_libraries(${SERVER_SOURCE} thrift_gen_cpp)
+target_link_libraries(${SERVER_SOURCE} /usr/local/lib/libthrift.a)
+# LINK_AGAINST_THRIFT_LIBRARY(${SERVER_SOURCE} thrift)
+target_link_libraries(${SERVER_SOURCE} ${ZLIB_LIBRARIES})
+target_link_libraries(${SERVER_SOURCE} pthread)
+
+add_executable(${CLIENT_SOURCE} CppClient.cpp)
+target_link_libraries(${CLIENT_SOURCE} thrift_gen_cpp)
+target_link_libraries(${CLIENT_SOURCE} /usr/local/lib/libthrift.a)
+# LINK_AGAINST_THRIFT_LIBRARY(${CLIENT_SOURCE} thrift)
+target_link_libraries(${CLIENT_SOURCE} ${ZLIB_LIBRARIES})
+target_link_libraries(${CLIENT_SOURCE} pthread)
