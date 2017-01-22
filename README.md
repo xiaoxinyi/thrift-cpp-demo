@@ -32,14 +32,14 @@ make
 
 ## CMakeLists.txt说明
 
-主要生成3个目标文件，分别是`libtutorialgencpp.a`，`server`和`client`。
+主要生成3个目标文件，分别是`thrift_gen_cpp.a`，`server`和`client`。
 
 在链接生成这三个目标文件的时候需要链接`thrift`库和`pthread`库。我的`thrift`库的路径是`/usr/local/lib/libthrift.a`。所以必须加上以下的两句：
 
 ```cmake
-# 比如链接生成目标tutorialgencpp
-target_link_libraries(tutorialgencpp /usr/local/lib/libthrift.a)
-target_link_libraries(tutorialgencpp pthread)
+# 比如链接生成目标thrift_gen_cpp
+target_link_libraries(thrift_gen_cpp /usr/local/lib/libthrift.a)
+target_link_libraries(thrift_gen_cpp pthread)
 ```
 
 NOTE:因为需要用到`boost`库，添加`include_directories("/usr/include/boost/")`。
