@@ -11,8 +11,8 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/gen-cpp")
 
 
-set(SERVER_SOURCE "server.cpp")
-set(CLIENT_SOURCE "client.cpp")
+set(SERVER_SOURCE "CppServer.cpp")
+set(CLIENT_SOURCE "CppClient.cpp")
 set(THRIFT_STATIC_LIB "/usr/local/lib/libthrift.a")
 set(THRIFT_NONBLOCK_LIB "/usr/local/lib/libthriftnb.a")
 set(EVENT_LIB "/usr/local/Cellar/libevent/2.0.22/lib/libevent.a")
